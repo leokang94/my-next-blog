@@ -20,8 +20,8 @@ export default function Posts({ posts }: PostProps) {
 }
 
 export const getStaticProps: GetStaticProps<PostProps> = async () => {
-  // Date 객체의 경우 직렬화가 안되기 때문에, json 객체로 파싱 후 전달
-  const posts = JSON.parse(JSON.stringify(getAllPosts()));
+  const posts = getAllPosts();
+
   return {
     props: { posts },
   };

@@ -24,13 +24,11 @@ export const getStaticProps: GetStaticProps<
   PostDetailProps,
   PathParams
 > = async ({ params }) => {
-  const _post = getPostBySlug(params!.slug);
-  const content = await markdownToHtml(_post.content || '');
-
-  const post = JSON.parse(JSON.stringify({ ..._post, content }));
+  const post = getPostBySlug(params!.slug);
+  const content = await markdownToHtml(post.content || '');
 
   return {
-    props: { post },
+    props: { post: { ...post, content } },
   };
 };
 
