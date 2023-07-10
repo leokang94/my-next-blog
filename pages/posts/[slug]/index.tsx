@@ -1,16 +1,18 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
+import Title from '@/components/Title';
 import { getAllPosts, getPostBySlug } from '@/lib/api';
 import { markdownToHtml } from '@/lib/markdown';
+import { PostInfo } from '@/types/post.type';
 
 type PostDetailProps = {
-  post: any;
+  post: PostInfo;
 };
 
 export default function PostDetail({ post }: PostDetailProps) {
   return (
     <div className="flex flex-col">
-      <h1>{post.title}</h1>
+      <Title>{post.title}</Title>
       <div dangerouslySetInnerHTML={{ __html: post.content }} />
     </div>
   );
@@ -37,7 +39,7 @@ export const getStaticPaths: GetStaticPaths<PathParams> = async () => {
 
   return {
     paths: posts.map((post) => ({
-      params: { slug: post.slug },
+      params: { slug: post.slug || '' },
     })),
     fallback: false,
   };

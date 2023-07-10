@@ -12,7 +12,9 @@ export default function Document() {
         />
       </Head>
       <body>
-        <Main />
+        <div className="max-w-[1024px] mx-auto p-4">
+          <Main />
+        </div>
         <NextScript />
       </body>
     </Html>

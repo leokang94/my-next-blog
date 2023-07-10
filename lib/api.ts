@@ -3,9 +3,13 @@ import matter from 'gray-matter';
 import { join } from 'path';
 import invariant from 'tiny-invariant';
 
+import { PostInfo } from '@/types/post.type';
+
 /**
  * @reference https://github.com/vercel/next.js/blob/canary/examples/blog-starter/lib/api.ts
  */
+
+type PostFields = keyof PostInfo;
 
 const POSTS_DIRECTORY = join(process.cwd(), '__posts');
 
@@ -23,45 +27,55 @@ export function getPostSlugs() {
  * @param fields
  * @returns items
  */
-export function getPostBySlug(slug: string, fields: string[] = []) {
+export function getPostBySlug(
+  slug: string,
+  fields: PostFields[] = []
+): PostInfo {
   const realSlug = slug.replace(/\.md$/, '');
   const fullPath = join(POSTS_DIRECTORY, `${realSlug}.md`);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
   // invariants
-  const mandatoryFields = ['title', 'date'];
-  mandatoryFields.forEach((field) => {
-    invariant(data[field], `Post에는 '${field}'가 필수입니다.`);
+  const mandatoryFrontmatterList = ['title', 'date'];
+  mandatoryFrontmatterList.forEach((field) => {
+    invariant(
+      data[field],
+      `블로그 포스트 frontmatter에는 '${field}'가 필수입니다.`
+    );
   });
 
-  type Items = Record<string, string>;
-  const items: Items = {};
+  const postInfo: PostInfo = {
+    slug: '',
+    title: '',
+    content: '',
+    date: new Date(),
+  };
 
   if (fields.length === 0) {
-    items.slug = realSlug;
-    items.content = content;
+    postInfo.slug = realSlug;
+    postInfo.content = content;
     Object.entries(data).forEach(([key, value]) => {
-      items[key] = value;
+      postInfo[key as keyof PostInfo] = value;
     });
 
-    return items;
+    return postInfo;
   }
 
   // 필요한 field들만 item에 세팅
   fields.forEach((field) => {
     if (field === 'slug') {
-      items[field] = realSlug;
+      postInfo[field] = realSlug;
     }
     if (field === 'content') {
-      items[field] = content;
+      postInfo[field] = content;
     }
     if (data[field]) {
-      items[field] = data[field];
+      postInfo[field] = data[field];
     }
   });
 
-  return items;
+  return postInfo;
 }
 
 /**
@@ -69,7 +83,7 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
  * @param fields
  * @returns
  */
-export function getAllPosts(fields: string[] = []) {
+export function getAllPosts(fields: PostFields[] = []) {
   const slugs = getPostSlugs();
   const posts = slugs
     .map((slug) => getPostBySlug(slug, fields))

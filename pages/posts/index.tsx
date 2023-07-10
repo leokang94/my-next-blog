@@ -1,18 +1,24 @@
 import type { GetStaticProps } from 'next';
+import Link from 'next/link';
 
+import PostItem from '@/components/PostItem';
+import Title from '@/components/Title';
 import { getAllPosts } from '@/lib/api';
+import { PostInfo } from '@/types/post.type';
 
 type PostProps = {
-  posts: any[];
+  posts: PostInfo[];
 };
 
 export default function Posts({ posts }: PostProps) {
   return (
     <div>
-      <h1>Post</h1>
+      <Title>Post</Title>
       <ul className="flex flex-col gap-4">
         {posts.map((post) => (
-          <li key={post.slug}>{post.title}</li>
+          <li key={post.slug}>
+            <PostItem post={post} />
+          </li>
         ))}
       </ul>
     </div>
