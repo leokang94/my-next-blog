@@ -1,16 +1,15 @@
-import type { GetStaticProps } from 'next';
-import Link from 'next/link';
-
 import PostItem from '@/components/PostItem';
 import Title from '@/components/Title';
 import { getAllPosts } from '@/lib/api';
-import { PostInfo } from '@/types/post.type';
 
-type PostProps = {
-  posts: PostInfo[];
-};
+async function getPosts() {
+  const posts = getAllPosts();
+  return posts;
+}
 
-export default function Posts({ posts }: PostProps) {
+export default async function PostPage() {
+  const posts = await getPosts();
+
   return (
     <div>
       <Title>Post</Title>
@@ -24,11 +23,3 @@ export default function Posts({ posts }: PostProps) {
     </div>
   );
 }
-
-export const getStaticProps: GetStaticProps<PostProps> = async () => {
-  const posts = getAllPosts();
-
-  return {
-    props: { posts },
-  };
-};

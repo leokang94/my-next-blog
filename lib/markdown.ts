@@ -1,8 +1,8 @@
 import rehypeFormat from 'rehype-format';
+import rehypePrismPlus from 'rehype-prism-plus';
 import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
-import remarkPrism from 'remark-prism';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
@@ -14,8 +14,8 @@ import { unified } from 'unified';
 export async function markdownToHtml(markdown: string) {
   const result = await unified()
     .use(remarkParse)
-    .use(remarkPrism)
     .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypePrismPlus)
     .use(rehypeRaw)
     .use(rehypeFormat)
     .use(rehypeStringify)

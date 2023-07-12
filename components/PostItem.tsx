@@ -1,5 +1,7 @@
+'use client';
+
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { PostInfo } from '@/types/post.type';
 
